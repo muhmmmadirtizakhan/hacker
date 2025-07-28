@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Corrected background property to display image */
+            background: url("numbergguessingpic.jpg") no-repeat center center fixed;
+            background-size: cover; /* Ensures the image covers the entire background */
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.5);
+            border: 1px solid #00ffcc;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            border: 2px solid #00ffcc;
+            border-radius: 10px;
+            width: 200px;
+            font-size: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px #00ffcc;
+            margin-bottom: 15px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            background-color: #00ffcc;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+
+        button:hover {
+            background-color: #00e6b8;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.9);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            min-height: 30px;
+            color: #ff5555;
+        }
+
+        .attempts {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .play-again-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #ff5722;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+        }
+
+        .play-again-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 87, 34, 0.9);
+        }
+
+        .dashboard-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #00bcd4;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+        }
+
+        .dashboard-btn:hover {
+            background-color: #00acc1;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 188, 212, 0.9);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎯 Number Guessing Game 🎯</h1>
+        <p>You have <strong>4 attempts</strong> to guess the number (1 to 100)</p>
+        <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100">
+        <button onclick="checkGuess()">Submit Guess</button>
+        <p class="message" id="message"></p>
+        <p class="attempts" id="attemptsLeft"></p>
+        <div class="button-group">
+            <button class="play-again-btn" id="playAgainBtn" onclick="resetGame()">Play Again</button>
+            <button class="dashboard-btn" onclick="goToDashboard()">Dashboard</button>
+        </div>
+    </div>
+
+    <audio id="backgroundSound" src="Morning-Routine-Lofi-Study-Music(chosic.com).mp3" loop preload="auto"></audio>
+    <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4386" preload="auto"></audio>
+    <audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/6504" preload="auto"></audio>
+
+    <script>
+        let secretNumber;
+        let attempts;
+
+        const backgroundSound = document.getElementById("backgroundSound");
+        const winSound = document.getElementById("winSound");
+        const loseSound = document.getElementById("loseSound");
+
+        window.onload = initializeGame;
+
+        function initializeGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 4;
+            document.getElementById("guessInput").value = "";
+            document.getElementById("message").innerHTML = "";
+            document.getElementById("attemptsLeft").innerHTML = `Attempts left: ${attempts}`;
+            document.getElementById("guessInput").disabled = false;
+            document.querySelector("button:not(.play-again-btn):not(.dashboard-btn)").disabled = false;
+            document.getElementById("playAgainBtn").style.display = "none";
+
+            backgroundSound.volume = 0.3;
+            backgroundSound.play().catch(e => console.log("Background music autoplay prevented:", e));
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById("guessInput").value);
+            const message = document.getElementById("message");
+            const attemptsLeft = document.getElementById("attemptsLeft");
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                message.innerHTML = "❌ Please enter a valid number between 1 and 100.";
+                message.style.color = "#ff5555";
+                return;
+            }
+
+            attempts--;
+
+            if (guess === secretNumber) {
+                message.innerHTML = "✅ Congratulations! You guessed it right! 🎉";
+                message.style.color = "#00ffcc";
+                winSound.play();
+                backgroundSound.pause();
+                disableGame();
+            } else if (attempts === 0) {
+                message.innerHTML = `💥 Game Over! The correct number was ${secretNumber}.`;
+                message.style.color = "#ff5555";
+                loseSound.play();
+                backgroundSound.pause();
+                disableGame();
+            } else {
+                message.innerHTML = guess < secretNumber ? "📉 Too low! Try a higher number." : "📈 Too high! Try a lower number.";
+                message.style.color = "#ffcc00";
+                attemptsLeft.innerHTML = `Attempts left: ${attempts}`;
+            }
+            document.getElementById("guessInput").value = "";
+        }
+
+        function disableGame() {
+            document.getElementById("guessInput").disabled = true;
+            document.querySelector("button:not(.play-again-btn):not(.dashboard-btn)").disabled = true;
+            document.getElementById("attemptsLeft").innerHTML = "";
+            document.getElementById("playAgainBtn").style.display = "block";
+        }
+
+        function resetGame() {
+            initializeGame();
+        }
+
+        function goToDashboard() {
+            window.location.href = 'final.html';
+        }
+    </script>
+</body>
+</html>

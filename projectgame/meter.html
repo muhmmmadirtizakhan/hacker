@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About This Project</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20240610/pngtree-computer-gaming-joystick-gaming-concept-game-controller-image_15745994.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .about-container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(0, 255, 204, 0.6);
+            border: 1px solid #00ffcc;
+            backdrop-filter: blur(8px);
+            width: 95%;
+            max-width: 900px;
+            box-sizing: border-box;
+            margin: 10px;
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin: 10px 0 20px 0;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.5);
+        }
+
+        p {
+            font-size: 1em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .pie-chart-section {
+            margin: 20px 0;
+        }
+
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ffcc00 0% 25%,    /* Idea & Imagination */
+                #ff5722 25% 45%,   /* UI Design Concept */
+                #00BFFF 45% 75%,   /* Backend Logic */
+                #cc00ff 75% 81.25%, /* Your Frontend Work */
+                #6a0dad 81.25% 100% /* AI Contribution */
+            );
+            margin: 0 auto 15px auto;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            color: #e0e0e0;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 6px;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background-color: rgba(0, 255, 204, 0.15);
+            border: 1px solid #00ffcc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00ffcc;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tech-item img {
+            height: 18px;
+        }
+
+        .back-btn {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+        }
+
+        @media (min-width: 768px) {
+            .about-container {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            p {
+                font-size: 1.1em;
+            }
+            .pie-chart {
+                width: 200px;
+                height: 200px;
+            }
+            .tech-item {
+                padding: 8px 16px;
+                font-size: 1em;
+            }
+            .tech-item img {
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <h1>About This Project</h1>
+        <p>
+            Made by <span class="highlight">Muhammad Irtiza Khan</span>, 
+            BSSE student at Karachi University.
+        </p>
+        
+        <div class="pie-chart-section">
+            <div class="pie-chart"></div>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ffcc00;"></span>
+                    Idea & Imagination (25%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ff5722;"></span>
+                    UI Design (20%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #00BFFF;"></span>
+                    Backend Logic (30%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #cc00ff;"></span>
+                    My Frontend (6.25%)
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #6a0dad;"></span>
+                    AI Contribution (18.75%)
+                </div>
+            </div>
+            <p style="margin-top: 15px;">
+                <span class="highlight">81.25%</span> original contribution
+            </p>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303205/html-5-logo.svg" alt="HTML"> HTML
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303117/css3-logo.svg" alt="CSS"> CSS
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303206/javascript-logo.svg" alt="JavaScript"> JavaScript
+            </div>
+            <div class="tech-item">
+                <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="Firebase"> Firebase
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303148/c-plus-plus-logo.svg" alt="C++"> 
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303233/java-logo.svg" alt="Java"> 
+            </div>
+        </div>
+
+        <button class="back-btn" onclick="goBack()">Back to Dashboard</button>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'final.html';
+        }
+    </script>
+</body>
+</html>

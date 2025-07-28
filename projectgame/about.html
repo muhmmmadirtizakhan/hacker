@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Game Zone</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20240610/pngtree-computer-gaming-joystick-gaming-concept-game-controller-image_15745994.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .about-container {
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 1200px; /* Wider container */
+            height: 80vh; /* Fixed height */
+            box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
+            border: 1px solid rgba(0, 191, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: row; /* Horizontal layout */
+            align-items: flex-start;
+            gap: 40px;
+            width: 100%;
+            height: calc(100% - 60px); /* Account for heading space */
+        }
+
+        .text-content {
+            flex: 1;
+            text-align: left;
+            overflow-y: auto;
+            padding-right: 20px;
+        }
+
+        .game-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 191, 255, 0.4);
+        }
+
+        .game-icon {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-icon:hover {
+            background: rgba(0, 191, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .game-icon span {
+            font-size: 2em;
+        }
+
+        .game-icon h3 {
+            margin: 0;
+            color: #00BFFF;
+            font-size: 1.2em;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0 0 20px 0;
+            color: #00BFFF;
+            text-shadow: 0 0 18px rgba(0, 191, 255, 0.9);
+            letter-spacing: 1.5px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid rgba(0, 191, 255, 0.7);
+            width: 100%;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            color: #f0f0f0;
+        }
+
+        .highlight {
+            color: #00ffcc;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.9);
+        }
+
+        .button-group {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .action-button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .back-button {
+            background-color: #FF4500;
+        }
+
+        .back-button:hover {
+            background-color: #CC3700;
+            transform: translateY(-3px);
+        }
+
+        .dashboard-button {
+            background-color: #4CAF50;
+        }
+
+        .dashboard-button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 1024px) {
+            .about-container {
+                max-width: 900px;
+                height: 85vh;
+            }
+            .content-wrapper {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .game-icons {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .game-icon {
+                flex: 1;
+                min-width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-container {
+                padding: 20px;
+                width: 95%;
+                height: 90vh;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-container {
+                padding: 15px;
+                height: 95vh;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .action-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <h1>About Our Game Zone</h1>
+        <div class="content-wrapper">
+            <div class="text-content">
+                <p>
+                    Welcome to the <span class="highlight">Game Zone</span> – your premier online hub for classic, engaging, and fun mini-games! We've meticulously crafted this platform to offer you a seamless escape into a world of simple yet captivating challenges.
+                </p>
+                <p>
+                    Our current collection proudly features <span class="highlight">four timeless games</span> that will test your skills and provide endless entertainment. Each game is designed with intuitive controls, clear visuals, and immersive experiences wrapped in our signature sleek interface.
+                </p>
+                <p>
+                    We're passionate about creating accessible fun for everyone and committed to expanding our library with more exciting titles and innovative features in the future. Dive in, explore, and let the games begin!
+                </p>
+                <div class="button-group">
+                    <button class="action-button back-button" onclick="window.history.back()">Go Back</button>
+                    <button class="action-button dashboard-button" onclick="location.href='final.html'">Go to Dashboard</button>
+                </div>
+            </div>
+            <div class="game-icons">
+                <div class="game-icon">
+                    <span>🎮</span>
+                    <h3>Rock Paper Scissors</h3>
+                </div>
+                <div class="game-icon">
+                    <span>🐍</span>
+                    <h3>Snake Water Gun</h3>
+                </div>
+                <div class="game-icon">
+                    <span>❌⭕</span>
+                    <h3>Tic-Tac-Toe</h3>
+                </div>
+                <div class="game-icon">
+                    <span>🔢</span>
+                    <h3>Number Guessing</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

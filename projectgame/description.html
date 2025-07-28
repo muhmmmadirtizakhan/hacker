@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About This Project</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-image: url('https://cdn.pixabay.com/photo/2019/05/28/04/55/summary-4234329_1280.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .about-container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(0, 255, 204, 0.6);
+            border: 1px solid #00ffcc;
+            backdrop-filter: blur(8px);
+            width: 90%;
+            max-width: 800px;
+            box-sizing: border-box;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin: 15px 0 20px 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+            border-bottom: 2px solid rgba(0, 255, 204, 0.5);
+            padding-bottom: 8px;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background-color: rgba(0, 255, 204, 0.15);
+            border: 1px solid #00ffcc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            color: #00ffcc;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tech-item img {
+            height: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn, .dashboard-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: none;
+        }
+
+        .back-btn {
+            background-color: #ff5722;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+        }
+
+        .dashboard-btn {
+            background-color: #00bcd4;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+        }
+
+        .back-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+        }
+
+        .dashboard-btn:hover {
+            background-color: #0097a7;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .about-container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .back-btn, .dashboard-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <h1>About This Project</h1>
+        <p>
+            This interactive web application is a creation of 
+            <span class="highlight">Muhammad Irtiza Khan</span>.
+        </p>
+        <p>
+            A passionate developer currently pursuing <span class="highlight">BSSE</span>
+            from <span class="highlight">Karachi University</span>.
+        </p>
+
+        <div class="tech-stack">
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303205/html-5-logo.svg" alt="HTML"> HTML
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303117/css3-logo.svg" alt="CSS"> CSS
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303206/javascript-logo.svg" alt="JavaScript"> JavaScript
+            </div>
+            <div class="tech-item">
+                <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="Firebase"> Firebase
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303148/c-plus-plus-logo.svg" alt="C++"> 
+            </div>
+            <div class="tech-item">
+                <img src="https://www.svgrepo.com/show/303233/java-logo.svg" alt="Java"> 
+            </div>
+        </div>
+
+        <p style="margin-top: 20px;">
+            Deployed on <span class="highlight">Firebase</span> for reliable and scalable hosting.
+        </p>
+
+        <div class="button-group">
+            <button class="back-btn" onclick="goBack()">Back</button>
+            <button class="dashboard-btn" onclick="goToDashboard()">Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            if (document.referrer.includes('huwaei.html')) {
+                window.history.back();
+            } else {
+                window.location.href = 'final.html'; 
+            }
+        }
+        
+        function goToDashboard() {
+            window.location.href = 'final.html';
+        }
+    </script>
+</body>
+</html>

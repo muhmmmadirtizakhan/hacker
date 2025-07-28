@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake, Water, Gun Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: url("snakegunwater.png") no-repeat center center fixed; /* Using your uploaded image */
+            background-size: cover; /* Changed to cover to ensure background always fills */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scrollbars */
+            position: relative;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px; /* Slightly increased padding for the larger size */
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.5);
+            border: 1px solid #00ffcc;
+            backdrop-filter: blur(5px);
+            max-width: 600px; /* Increased max-width for horizontal expansion */
+            width: 90%; /* Adjusted width percentage for responsiveness */
+            box-sizing: border-box;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px; /* Increased gap between elements for better spacing */
+            overflow-y: auto; /* Allow internal scrolling if content overflows vertically on small screens */
+            max-height: 95vh; /* Limit container height to prevent it from going off-screen */
+            scrollbar-width: none; /* For Firefox */
+            -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 15px;
+            font-size: 2.5em; /* Slightly larger heading */
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Consistent gap */
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .instructions {
+            font-size: 1em; /* Slightly larger instructions */
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .choices {
+            display: flex;
+            gap: 15px; /* Increased gap between choice buttons */
+            margin-bottom: 20px; /* Increased margin */
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .choice-btn {
+            background: rgba(0, 255, 204, 0.1);
+            border: 2px solid #00ffcc;
+            color: #fff;
+            padding: 12px 25px; /* Increased padding for larger buttons */
+            border-radius: 10px;
+            font-size: 1em; /* Slightly larger font */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 6px rgba(0, 255, 204, 0.7);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Increased gap for icon and text */
+        }
+
+        .choice-btn:hover {
+            background-color: #00ffcc;
+            color: #000;
+            transform: scale(1.08); /* More pronounced hover effect */
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.9);
+            border-color: #00ffff;
+        }
+
+        .result-display {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            padding: 15px; /* Increased padding */
+            margin-bottom: 20px; /* Increased margin */
+            min-height: 70px; /* Increased min-height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px; /* Increased gap */
+            width: 90%; /* Make result display take more width */
+        }
+
+        .result-message {
+            font-size: 1.5em; /* Larger font */
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+        .result-message.win { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
+        .result-message.lose { color: #ff5722; text-shadow: 0 0 15px #ff5722; }
+        .result-message.tie { color: #ffcc00; text-shadow: 0 0 15px #ffcc00; }
+
+        .computer-choice-display {
+            font-size: 1em; /* Slightly larger */
+            color: #ccc;
+        }
+
+        .score {
+            font-size: 1.2em; /* Larger score text */
+            color: #ffcc00;
+            margin-bottom: 20px; /* Increased margin */
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px; /* Increased gap between buttons */
+            justify-content: center;
+            width: 100%;
+        }
+
+        .reset-btn, .dashboard-btn {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 12px 25px; /* Increased padding */
+            border-radius: 8px;
+            font-size: 1.1em; /* Larger font */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+        }
+
+        .dashboard-btn {
+            background-color: #00bcd4;
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+        }
+
+        .reset-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-4px) scale(1.05); /* More active hover */
+            box-shadow: 0 0 25px rgba(255, 87, 34, 0.8);
+        }
+
+        .dashboard-btn:hover {
+            background-color: #0097a7;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 188, 212, 0.8);
+        }
+
+        .music-toggle-btn {
+            position: absolute;
+            top: 15px; /* Adjusted position */
+            right: 15px; /* Adjusted position */
+            background-color: rgba(0, 255, 204, 0.2);
+            border: 1px solid #00ffcc;
+            color: #fff;
+            padding: 8px; /* Increased padding */
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em; /* Larger icon */
+            width: 40px; /* Larger button */
+            height: 40px; /* Larger button */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            z-index: 100;
+        }
+        .music-toggle-btn:hover {
+            background-color: rgba(0, 255, 204, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 1);
+            transform: scale(1.1);
+        }
+
+        .icon {
+            font-size: 1.3em; /* Slightly larger icons within buttons */
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%; /* Allow it to take more width on smaller screens */
+                padding: 20px;
+                gap: 12px;
+            }
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 12px;
+            }
+            .instructions {
+                font-size: 0.9em;
+            }
+            .choices {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .choice-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+                gap: 5px;
+            }
+            .icon {
+                font-size: 1.1em;
+            }
+            .result-display {
+                padding: 12px;
+                min-height: 60px;
+                margin-bottom: 15px;
+                width: 95%;
+            }
+            .result-message {
+                font-size: 1.3em;
+            }
+            .computer-choice-display {
+                font-size: 0.85em;
+            }
+            .score {
+                font-size: 1.1em;
+                margin-bottom: 15px;
+            }
+            .reset-btn, .dashboard-btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .button-group {
+                gap: 10px;
+            }
+            .music-toggle-btn {
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                gap: 10px;
+                min-height: 75vh; /* Ensure it stays tall enough on small phones */
+            }
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+            .instructions {
+                font-size: 0.85em;
+            }
+            .choices {
+                flex-direction: column; /* Stack buttons vertically on very small screens */
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            .choice-btn {
+                width: 90%; /* Make buttons wider when stacked */
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+            .icon {
+                font-size: 1em;
+            }
+            .result-display {
+                padding: 10px;
+                min-height: 50px;
+                margin-bottom: 10px;
+                width: 98%;
+            }
+            .result-message {
+                font-size: 1.1em;
+            }
+            .computer-choice-display {
+                font-size: 0.8em;
+            }
+            .score {
+                font-size: 1em;
+                margin-bottom: 10px;
+            }
+            .reset-btn, .dashboard-btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .button-group {
+                flex-direction: column; /* Stack control buttons vertically too */
+                gap: 8px;
+            }
+            .music-toggle-btn {
+                top: 8px;
+                right: 8px;
+                width: 30px;
+                height: 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍💧🔫 Snake, Water, Gun</h1>
+        <div class="game-area">
+            <p class="instructions">Choose your weapon!</p>
+            <div class="choices">
+                <button class="choice-btn" data-choice="snake">
+                    <span class="icon">🐍</span> Snake
+                </button>
+                <button class="choice-btn" data-choice="water">
+                    <span class="icon">💧</span> Water
+                </button>
+                <button class="choice-btn" data-choice="gun">
+                    <span class="icon">🔫</span> Gun
+                </button>
+            </div>
+            <div class="result-display">
+                <p class="result-message" id="result-message">Make your move!</p>
+                <p class="computer-choice-display" id="computer-choice-display"></p>
+            </div>
+            <div class="score">You: <span id="user-score">0</span> | Computer: <span id="computer-score">0</span></div>
+            <div class="button-group">
+                <button class="reset-btn" onclick="resetGame()">Play Again!</button>
+                <button class="dashboard-btn" onclick="goToDashboard()">Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="music-toggle-btn" id="musicToggleBtn" onclick="toggleMusic()">🎵</button>
+
+    <audio id="backgroundMusic" src="Heart-Of-The-Ocean(chosic.com).mp3" loop preload="auto"></audio>
+    <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4387" preload="auto"></audio>
+    <audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/6504" preload="auto"></audio>
+    <audio id="tieSound" src="https://www.fesliyanstudios.com/play-mp3/4373" preload="auto"></audio>
+    <script>
+        const choices = ['snake', 'water', 'gun'];
+        let userScore = 0;
+        let computerScore = 0;
+        let musicPlaying = false;
+
+        const resultMessageDiv = document.getElementById('result-message');
+        const computerChoiceDisplay = document.getElementById('computer-choice-display');
+        const userScoreSpan = document.getElementById('user-score');
+        const computerScoreSpan = document.getElementById('computer-score');
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const winSound = document.getElementById('winSound');
+        const loseSound = document.getElementById('loseSound');
+        const tieSound = document.getElementById('tieSound');
+        const musicToggleBtn = document.getElementById('musicToggleBtn');
+
+        window.onload = () => {
+            backgroundMusic.volume = 0.2;
+            backgroundMusic.play().then(() => {
+                musicPlaying = true;
+                musicToggleBtn.textContent = '🔇'; // Muted icon if music starts
+            }).catch(e => {
+                console.error("Background music autoplay prevented:", e);
+                musicPlaying = false;
+                musicToggleBtn.textContent = '🔊'; // Unmuted icon if music fails to start
+            });
+
+            choiceButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    playGame(button.dataset.choice);
+                });
+            });
+
+            [winSound, loseSound, tieSound].forEach(sound => {
+                sound.onended = () => {
+                    if (musicPlaying && backgroundMusic.paused) {
+                        backgroundMusic.play().catch(e => console.error("Music resume error:", e));
+                    }
+                };
+            });
+        };
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                backgroundMusic.pause();
+                musicPlaying = false;
+                musicToggleBtn.textContent = '🔊'; // Speaker icon when paused
+            } else {
+                backgroundMusic.play().then(() => {
+                    musicPlaying = true;
+                    musicToggleBtn.textContent = '🔇'; // Mute icon when playing
+                }).catch(e => {
+                    console.error("Music toggle play prevented:", e);
+                });
+            }
+        }
+
+        function getComputerChoice() {
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        function playGame(userChoice) {
+            // Pause background music briefly for sound effects
+            if (musicPlaying && !backgroundMusic.paused) {
+                backgroundMusic.pause();
+            }
+
+            // Reset sound effect playback to start
+            winSound.currentTime = 0;
+            loseSound.currentTime = 0;
+            tieSound.currentTime = 0;
+
+            const computerChoice = getComputerChoice();
+            let resultText = '';
+            let resultClass = '';
+
+            computerChoiceDisplay.textContent = `Computer chose: ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)}`;
+
+            if (userChoice === computerChoice) {
+                resultText = `It's a tie! You both chose ${userChoice.charAt(0).toUpperCase() + userChoice.slice(1)}.`;
+                resultClass = 'tie';
+                tieSound.play();
+            } else if (
+                (userChoice === 'snake' && computerChoice === 'water') ||
+                (userChoice === 'water' && computerChoice === 'gun') ||
+                (userChoice === 'gun' && computerChoice === 'snake')
+            ) {
+                resultText = `You win! ${userChoice.charAt(0).toUpperCase() + userChoice.slice(1)} beats ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)}.`;
+                userScore++;
+                resultClass = 'win';
+                winSound.play();
+            } else {
+                resultText = `You lose! ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)} beats ${userChoice.charAt(0).toUpperCase() + userChoice.slice(1)}.`;
+                computerScore++;
+                resultClass = 'lose';
+                loseSound.play();
+            }
+
+            resultMessageDiv.textContent = resultText;
+            resultMessageDiv.className = 'result-message ' + resultClass;
+            userScoreSpan.textContent = userScore;
+            computerScoreSpan.textContent = computerScore;
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            userScoreSpan.textContent = userScore;
+            computerScoreSpan.textContent = computerScore;
+            resultMessageDiv.textContent = 'Make your move!';
+            resultMessageDiv.className = 'result-message';
+            computerChoiceDisplay.textContent = '';
+
+            // Resume background music if it was playing and paused for sounds
+            if (musicPlaying && backgroundMusic.paused) {
+                backgroundMusic.play().catch(e => console.error("Background music resume prevented:", e));
+            }
+        }
+
+         function goToDashboard() {
+        // This line will redirect to your dashboard file
+        window.location.href = "final.html";
+         }
+    </script>
+</body>
+</html>

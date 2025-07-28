@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            /* Reverted to original background URL, assuming this is what "phelaey wala" refers to */
+            background: url('https://play-lh.googleusercontent.com/EUgRlCOH_jwtW39SaG7XeKq8pJsQfKkZB4MYED18npdsKeRZDmN9xVsSV3nbpoJGgIU=w526-h296-rw') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow: hidden; /* Prevent scrollbars */
+            position: relative; /* For music control */
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            /* Reverted padding to original 45px */
+            padding: 45px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.5);
+            border: 1px solid #00ffcc;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* Added for wider browser support */
+            /* Removed max-height, overflow-y, scrollbar-width, -ms-overflow-style, margin to revert to original */
+        }
+
+        h1 {
+            color: #00ffcc;
+            /* Reverted margin-bottom and font-size to original */
+            margin-bottom: 35px;
+            font-size: 3em;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+
+        .player-input {
+            /* Reverted margin-bottom to original */
+            margin-bottom: 20px;
+        }
+
+        .player-input label {
+            display: block;
+            /* Reverted margin-bottom and font-size to original */
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            color: #00ffcc;
+        }
+
+        .player-input input {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid #00ffcc;
+            color: #fff;
+            /* Reverted padding and font-size to original */
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 70%;
+            max-width: 250px;
+        }
+        .player-input input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+        }
+
+        .start-btn {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            /* Reverted padding and font-size to original */
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+            /* Reverted margin-top to original */
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 87, 34, 0.8);
+        }
+
+        .game-board {
+            display: grid;
+            /* Reverted cell size to original 100px */
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            /* Reverted margin-top to original */
+            margin-top: 30px;
+            border: 5px solid #00ffcc;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.6);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .cell {
+            width: 100px; /* Reverted to original fixed width/height */
+            height: 100px; /* Reverted to original fixed width/height */
+            background: rgba(0, 255, 204, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Reverted font-size to original */
+            font-size: 4em;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+        }
+
+        .cell:hover:not(.occupied) {
+            background-color: rgba(0, 255, 204, 0.2);
+            transform: scale(1.02);
+        }
+
+        .cell.occupied {
+            cursor: not-allowed;
+        }
+
+        .cell.x-player {
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .cell.o-player {
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        .game-info {
+            /* Reverted font-size and margin-top to original */
+            font-size: 1.5em;
+            margin-top: 30px;
+            min-height: 40px; /* Ensure space for messages */
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- Buttons Container Styling (for Reset & Dashboard) --- */
+        .game-buttons {
+            display: flex; /* Use flexbox to put them side-by-side */
+            justify-content: center; /* Center the group of buttons */
+            gap: 20px; /* Space between the two buttons */
+            margin-top: 20px; /* Space from the game board/info */
+            flex-wrap: wrap; /* Allow buttons to wrap on very small screens */
+            padding-bottom: 10px; /* Small padding at bottom to avoid sticking */
+        }
+
+        .reset-btn {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            /* Reverted padding and font-size to original */
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+            /* Removed individual margin-top as it's handled by .game-buttons */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .reset-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 87, 34, 0.8);
+        }
+
+        /* Dashboard Button Styling - similar to reset-btn but different color */
+        .dashboard-btn {
+            background-color: #00BFFF; /* A nice blue color */
+            color: #fff;
+            border: none;
+            /* Reverted padding and font-size to original */
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            /* Removed individual margin-top */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .dashboard-btn:hover {
+            background-color: #008DCC; /* Darker blue on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.8);
+        }
+
+        /* Initial game screen */
+        #game-setup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* In-game screen */
+        #game-play {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Music control button */
+        .music-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 255, 204, 0.2);
+            border: 1px solid #00ffcc;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            z-index: 100;
+        }
+        .music-toggle-btn:hover {
+            background-color: rgba(0, 255, 204, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.8);
+        }
+
+        /* Responsive adjustments (adjusted back to original scale, but keeping button stacking) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 35px; /* Slightly reduce padding on smaller screens */
+            }
+            h1 {
+                font-size: 2.5em; /* Slightly smaller on tablets */
+            }
+            .player-input input {
+                width: 80%;
+            }
+            .game-board {
+                grid-template-columns: repeat(3, 90px); /* Slightly smaller cells */
+                grid-template-rows: repeat(3, 90px);
+            }
+            .cell {
+                width: 90px;
+                height: 90px;
+                font-size: 3.5em;
+            }
+            .reset-btn, .dashboard-btn {
+                padding: 12px 25px; /* Adjust button padding */
+                font-size: 1.1em;
+            }
+            .game-buttons {
+                flex-direction: column; /* Stack buttons vertically if screen is too narrow */
+                gap: 10px; /* Smaller gap when stacked */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px; /* Further reduce padding on phones */
+            }
+            h1 {
+                font-size: 2em; /* Smaller on phones */
+            }
+            .player-input input {
+                width: 90%;
+            }
+            .game-board {
+                grid-template-columns: repeat(3, 80px); /* Even smaller cells */
+                grid-template-rows: repeat(3, 80px);
+                gap: 3px;
+            }
+            .cell {
+                width: 80px;
+                height: 80px;
+                font-size: 3em;
+            }
+            .reset-btn, .dashboard-btn {
+                padding: 10px 20px; /* Further adjust button padding */
+                font-size: 1em;
+            }
+            .game-buttons {
+                flex-direction: column; /* Ensure stacking */
+                gap: 8px; /* Even smaller gap when stacked */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✖️🅾️ Tic Tac Toe</h1>
+
+        <div id="game-setup">
+            <div class="player-input">
+                <label for="player1-name">Player 1 (X) Name:</label>
+                <input type="text" id="player1-name" value="Player 1">
+            </div>
+            <div class="player-input">
+                <label for="player2-name">Player 2 (O) Name:</label>
+                <input type="text" id="player2-name" value="Player 2">
+            </div>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="game-play">
+            <div class="game-info" id="game-status"></div>
+            <div class="game-board" id="game-board">
+            </div>
+            <div class="game-buttons">
+                <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+                <button class="dashboard-btn" onclick="goToDashboard()">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="music-toggle-btn" id="gameMusicToggleBtn">🎵</button>
+
+    <audio id="backgroundMusic" src="Autumn-Scene(chosic.com).mp3" loop preload="auto"></audio>
+    <audio id="moveSound" src="https://www.fesliyanstudios.com/play-mp3/4377" preload="auto"></audio>
+    <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4387" preload="auto"></audio>
+    <audio id="drawSound" src="https://www.fesliyanstudios.com/play-mp3/283" preload="auto"></audio>
+    <audio id="errorSound" src="https://www.fesliyanstudios.com/play-mp3/6504" preload="auto"></audio>
+
+    <script>
+        // Game State Variables
+        let place = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+        let turn = 'X';
+        let draw = false;
+        let player1Name = "Player 1";
+        let player2Name = "Player 2";
+        let gameActive = true;
+
+        // DOM Elements
+        const gameSetupScreen = document.getElementById('game-setup');
+        const gamePlayScreen = document.getElementById('game-play');
+        const player1NameInput = document.getElementById('player1-name');
+        const player2NameInput = document.getElementById('player2-name');
+        const gameBoardDiv = document.getElementById('game-board');
+        const gameStatusDiv = document.getElementById('game-status');
+
+        // Audio Elements
+        const gameBackgroundMusic = document.getElementById('backgroundMusic');
+        const moveSound = document.getElementById('moveSound');
+        const winSound = document.getElementById('winSound');
+        const drawSound = document.getElementById('drawSound');
+        const errorSound = document.getElementById('errorSound');
+        const gameMusicToggleBtn = document.getElementById('gameMusicToggleBtn');
+        
+        let gameMusicPlaying = false;
+
+        // --- Music Control for THIS Game Page ---
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.opener && window.opener.backgroundMusic) {
+                window.opener.backgroundMusic.pause();
+                console.log("Dashboard music paused by Tic-Tac-Toe page.");
+            }
+            
+            gameBackgroundMusic.volume = 0.3;
+            const savedGameMusicState = localStorage.getItem('ticTacToeMusicMuted');
+            if (savedGameMusicState === 'true') {
+                gameBackgroundMusic.muted = true;
+                gameMusicToggleBtn.textContent = '🔇';
+            } else {
+                gameBackgroundMusic.muted = false;
+                gameMusicToggleBtn.textContent = '🔊';
+                gameBackgroundMusic.play().then(() => {
+                    gameMusicPlaying = true;
+                }).catch(e => {
+                    console.error("Tic-Tac-Toe background music autoplay prevented:", e);
+                    gameMusicPlaying = false;
+                    gameMusicToggleBtn.textContent = '🔇';
+                });
+            }
+        });
+
+        // Function to navigate back to dashboard
+        function goToDashboard() {
+            gameBackgroundMusic.pause(); // Pause game music before leaving
+            gameBackgroundMusic.currentTime = 0; // Reset for next time
+            localStorage.removeItem('ticTacToeMusicMuted'); // Clear specific game music state
+
+            // Navigate back to the dashboard. Assuming 'huwaei.html' is your dashboard.
+            window.location.href = 'final.html'; 
+        }
+
+        // When leaving THIS game page (e.g., back to dashboard)
+        window.addEventListener('beforeunload', function() {
+            gameBackgroundMusic.pause();
+            gameBackgroundMusic.currentTime = 0;
+            console.log("Leaving Tic-Tac-Toe. Game music paused (if playing).");
+        });
+
+        function toggleMusic() {
+            if (gameBackgroundMusic.muted) {
+                gameBackgroundMusic.muted = false;
+                gameBackgroundMusic.play().catch(e => console.error("Error playing game music after unmute:", e));
+                gameMusicToggleBtn.textContent = '🔊';
+                localStorage.setItem('ticTacToeMusicMuted', 'false');
+            } else {
+                gameBackgroundMusic.muted = true;
+                gameBackgroundMusic.pause();
+                gameMusicToggleBtn.textContent = '🔇';
+                localStorage.setItem('ticTacToeMusicMuted', 'true');
+            }
+            gameMusicPlaying = !gameBackgroundMusic.muted;
+        }
+
+        // --- Game Setup & Music Control ---
+        function startGame() {
+            player1Name = player1NameInput.value.trim() || "Player 1";
+            player2Name = player2NameInput.value.trim() || "Player 2";
+
+            gameSetupScreen.style.display = 'none';
+            gamePlayScreen.style.display = 'flex';
+            
+            initializeGame();
+        }
+
+        // --- Core Game Logic ---
+        function initializeGame() {
+            place = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+            turn = 'X';
+            draw = false;
+            gameActive = true;
+            renderBoard();
+            gameStatusDiv.textContent = `${turn === 'X' ? player1Name : player2Name} [${turn}]'s turn`;
+
+            moveSound.currentTime = 0;
+            winSound.currentTime = 0;
+            drawSound.currentTime = 0;
+            errorSound.currentTime = 0;
+        }
+
+        function renderBoard() {
+            gameBoardDiv.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.textContent = place[i][j] === 'X' || place[i][j] === 'O' ? place[i][j] : '';
+                    if (place[i][j] === 'X') {
+                        cell.classList.add('x-player', 'occupied');
+                    } else if (place[i][j] === 'O') {
+                        cell.classList.add('o-player', 'occupied');
+                    }
+                    cell.addEventListener('click', handleCellClick);
+                    gameBoardDiv.appendChild(cell);
+                }
+            }
+        }
+
+        function handleCellClick(event) {
+            if (!gameActive) return;
+
+            const row = parseInt(event.target.dataset.row);
+            const col = parseInt(event.target.dataset.col);
+
+            if (place[row][col] === 'X' || place[row][col] === 'O') {
+                gameStatusDiv.textContent = `🚫 That spot is already taken! Try again, ${turn === 'X' ? player1Name : player2Name}.`;
+                errorSound.play();
+                return;
+            }
+
+            moveSound.play().then(() => {
+                if (!gameBackgroundMusic.muted && !gameBackgroundMusic.paused) {
+                    gameBackgroundMusic.pause();
+                    moveSound.onended = () => {
+                        gameBackgroundMusic.play().catch(e => console.error("Game music resume error:", e));
+                    };
+                }
+            }).catch(e => {
+                console.error("Move sound play error:", e);
+                if (!gameBackgroundMusic.muted && gameBackgroundMusic.paused && gameMusicPlaying) {
+                    gameBackgroundMusic.play().catch(e => console.error("Game music resume after move sound fail:", e));
+                }
+            });
+
+            if (turn === 'X') {
+                place[row][col] = 'X';
+                event.target.textContent = 'X';
+                event.target.classList.add('x-player', 'occupied');
+                turn = 'O';
+            } else {
+                place[row][col] = 'O';
+                event.target.textContent = 'O';
+                event.target.classList.add('o-player', 'occupied');
+                turn = 'X';
+            }
+            
+            checkGameEnd();
+        }
+
+        function checkGameEnd() {
+            if (checkWin()) {
+                gameActive = false;
+                let winnerName = (turn === 'O' ? player1Name : player2Name);
+                gameStatusDiv.textContent = `🎉 CONGRATULATIONS! ${winnerName} [${turn === 'O' ? 'X' : 'O'}] WINS!`;
+                winSound.play();
+                if (!gameBackgroundMusic.muted) {
+                    gameBackgroundMusic.pause();
+                }
+            } else if (checkDraw()) {
+                gameActive = false;
+                gameStatusDiv.textContent = `🤝 It's a DRAW!`;
+                drawSound.play();
+                if (!gameBackgroundMusic.muted) {
+                    gameBackgroundMusic.pause();
+                }
+            } else {
+                gameStatusDiv.textContent = `${turn === 'X' ? player1Name : player2Name} [${turn}]'s turn`;
+            }
+        }
+
+        function checkWin() {
+            for (let i = 0; i < 3; i++) {
+                if (place[i][0] === place[i][1] && place[i][1] === place[i][2]) {
+                    return true;
+                }
+            }
+            for (let j = 0; j < 3; j++) {
+                if (place[0][j] === place[1][j] && place[1][j] === place[2][j]) {
+                    return true;
+                }
+            }
+            if (
+                (place[0][0] === place[1][1] && place[1][1] === place[2][2]) ||
+                (place[0][2] === place[1][1] && place[1][1] === place[2][0])
+            ) {
+                return true;
+            }
+            return false;
+        }
+
+        function checkDraw() {
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (place[i][j] !== 'X' && place[i][j] !== 'O') {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function resetGame() {
+            gameSetupScreen.style.display = 'flex';
+            gamePlayScreen.style.display = 'none';
+            player1NameInput.value = "Player 1";
+            player2NameInput.value = "Player 2";
+            
+            initializeGame();
+            if (gameMusicPlaying && gameBackgroundMusic.muted === false) {
+                 gameBackgroundMusic.play().catch(e => console.error("Background music resume on reset prevented:", e));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeGame);
+        gameMusicToggleBtn.addEventListener('click', toggleMusic);
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Zone Dashboard</title>
+  <!-- 💡 Tumhara style unchanged rahega -->
+  <style>
+            * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20240610/pngtree-computer-gaming-joystick-gaming-concept-game-controller-image_15745994.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            overflow: hidden; /* This is key: Hides any overflow, effectively removing the scrollbar */
+        }
+
+        .dashboard-container {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            padding: 30px; /* Reduced padding slightly to save vertical space */
+            text-align: center;
+            width: 90%;
+            max-width: 900px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            /* Flexbox properties to center content vertically within the container */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            flex-grow: 1; /* Allow container to grow if necessary, though height is constrained by body */
+            max-height: 95vh; /* Limit dashboard height to ensure it fits */
+            overflow-y: auto; /* Allow internal scrolling if content within dashboard exceeds its max-height */
+            scrollbar-width: none; /* For Firefox */
+            -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .dashboard-container::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.2em; /* Slightly adjusted font size */
+            margin-bottom: 25px; /* Reduced margin to save space */
+            color: #00BFFF;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.7), 0 0 25px rgba(0, 191, 255, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Slightly smaller min-width for cards */
+            gap: 20px; /* Reduced gap */
+            margin-bottom: 20px; /* Reduced margin */
+            width: 100%; /* Ensure grid takes full width */
+            flex-grow: 1; /* Allow grid to expand */
+            padding: 0 10px; /* Add slight horizontal padding to the grid itself */
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px; /* Reduced padding */
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.2em; /* Slightly smaller font */
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 110px; /* Reduced min-height */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-card:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-8px) scale(1.02); /* Slightly less pronounced hover */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logout-button {
+            background-color: #FF4500;
+            padding: 10px 18px; /* Adjusted padding */
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9em; /* Slightly smaller font */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            position: absolute;
+            top: 15px; /* Adjusted position */
+            right: 15px; /* Adjusted position */
+            z-index: 10;
+        }
+
+        .logout-button:hover {
+            background-color: #CC3700;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .music-toggle-button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px; /* Adjusted padding */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em; /* Adjusted font size */
+            font-weight: bold;
+            margin-top: 20px; /* Reduced margin */
+            margin-bottom: 20px; /* Reduced margin */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .music-toggle-button:hover {
+            background-color: #0d47a1;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8em;
+                margin-bottom: 20px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 15px;
+            }
+            .feature-card {
+                font-size: 1.1em;
+                min-height: 100px;
+                padding: 18px;
+            }
+            .dashboard-container {
+                padding: 25px;
+            }
+            .logout-button, .music-toggle-button {
+                font-size: 0.9em;
+                padding: 9px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 18px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .feature-card {
+                font-size: 1em;
+                min-height: 90px;
+                padding: 15px;
+            }
+            .dashboard-container {
+                padding: 20px;
+            }
+            .logout-button, .music-toggle-button {
+                font-size: 0.8em;
+                padding: 8px 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr; /* Stack cards vertically on small screens */
+                gap: 10px;
+            }
+            .feature-card {
+                padding: 12px;
+                font-size: 0.9em;
+                min-height: 70px;
+            }
+            .dashboard-container {
+                padding: 15px;
+                max-height: 98vh; /* Allow a bit more space for very small screens */
+            }
+            .logout-button {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.7em;
+            }
+            .music-toggle-button {
+                padding: 6px 12px;
+                font-size: 0.8em;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+  </style>
+</head>
+<body>
+  <audio id="backgroundMusic" src="maxkomusic-heroism(chosic.com).mp3" loop preload="auto">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="dashboard-container">
+    <button class="logout-button" onclick="logout()">Logout</button>
+
+    <h1>Game Zone Dashboard</h1>
+
+    <button id="musicToggle" class="music-toggle-button">Music Off</button>
+    <div class="feature-grid">
+      <div class="feature-card" onclick="navigateTo('animateddeesign.html')">1. Rock-Paper-Scissors</div>
+      <div class="feature-card" onclick="navigateTo('sssssssssssssssssss.html')">2. Snake-Water-Gun</div>
+      <div class="feature-card" onclick="navigateTo('sed.html')">3. Tic-Tac-Toe</div>
+      <div class="feature-card" onclick="navigateTo('testing.html')">4. Number Guessing</div>
+      <div class="feature-card" onclick="navigateTo('meter.html')">5. Contribution Meter</div>
+      <div class="feature-card" onclick="navigateTo('about.html')">6. About</div>
+      <div class="feature-card" onclick="navigateTo('description.html')">7. Description</div>
+    </div>
+  </div>
+
+  <!-- 🔐 Firebase + Auth Handling -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyATnY-9FlItj1TByxgtOwg1DKUWJ17dcSQ",
+      authDomain: "game-zone-by-mik.firebaseapp.com",
+      projectId: "game-zone-by-mik",
+      storageBucket: "game-zone-by-mik.appspot.com",
+      messagingSenderId: "243191168499",
+      appId: "1:243191168499:web:db5ae6058ba1d4879ae686",
+      measurementId: "G-F6GP32TP8W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Check if user is logged in
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // ✅ Logout Function
+    window.logout = function () {
+      signOut(auth)
+        .then(() => {
+          alert("Logged out");
+          backgroundMusic.pause();
+          backgroundMusic.currentTime = 0;
+          localStorage.removeItem('dashboardMusicState');
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          alert("Logout error: " + error.message);
+        });
+    };
+  </script>
+
+  <!-- 🎵 Dashboard Music & Navigation -->
+  <script>
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const musicToggleButton = document.getElementById('musicToggle');
+    const MUSIC_STATE_KEY = 'dashboardMusicState';
+
+    function saveMusicState() {
+      const state = {
+        muted: backgroundMusic.muted,
+        currentTime: backgroundMusic.currentTime,
+        isPlaying: !backgroundMusic.paused
+      };
+      localStorage.setItem(MUSIC_STATE_KEY, JSON.stringify(state));
+    }
+
+    function restoreMusicState() {
+      const savedState = localStorage.getItem(MUSIC_STATE_KEY);
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        backgroundMusic.muted = state.muted;
+        backgroundMusic.currentTime = state.currentTime || 0;
+        musicToggleButton.textContent = state.muted ? 'Music On' : 'Music Off';
+
+        if (state.isPlaying && !document.hidden) {
+          backgroundMusic.play().catch(e => {
+            backgroundMusic.muted = true;
+            musicToggleButton.textContent = 'Music On';
+          });
+        } else {
+          backgroundMusic.pause();
+        }
+      } else {
+        backgroundMusic.muted = true;
+        musicToggleButton.textContent = 'Music On';
+        backgroundMusic.play().catch(e => {});
+      }
+    }
+
+    musicToggleButton.addEventListener('click', function () {
+      if (backgroundMusic.muted) {
+        backgroundMusic.muted = false;
+        backgroundMusic.play().catch(e => {});
+        musicToggleButton.textContent = 'Music Off';
+      } else {
+        backgroundMusic.muted = true;
+        backgroundMusic.pause();
+        musicToggleButton.textContent = 'Music On';
+      }
+      saveMusicState();
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        saveMusicState();
+        if (!backgroundMusic.muted) {
+          backgroundMusic.pause();
+        }
+      } else {
+        restoreMusicState();
+      }
+    });
+
+    function navigateTo(url) {
+      saveMusicState();
+      window.location.href = url;
+    }
+
+    document.addEventListener('DOMContentLoaded', restoreMusicState);
+  </script>
+</body>
+</html>

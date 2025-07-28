@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock, Paper, Scissors Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: url("sa.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 45px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.5);
+            border: 1px solid #00ffcc;
+            backdrop-filter: blur(5px);
+            position: relative; /* Important for positioning the dashboard button */
+        }
+
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 35px;
+            font-size: 3em;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+
+        .choices {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .choice-btn {
+            background: rgba(0, 255, 204, 0.1);
+            border: 3px solid #00ffcc;
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+            font-weight: bold;
+        }
+
+        .choice-btn:hover {
+            background-color: #00ffcc;
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.8), 0 0 40px rgba(0, 255, 204, 0.5);
+            border-color: #00ffff;
+        }
+
+        .result {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            min-height: 40px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .result.win { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
+        .result.lose { color: #ff5722; text-shadow: 0 0 15px #ff5722; }
+        .result.tie { color: #ffcc00; text-shadow: 0 0 15px #ffcc00; }
+
+        .score {
+            font-size: 20px;
+            color: #ffcc00;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+        }
+
+        .reset-btn:hover {
+            background-color: #e64a19;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 87, 34, 0.8);
+        }
+
+        /* Dashboard button style */
+        .dashboard-button {
+            background-color: #00BFFF; /* Blue color for dashboard button */
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            position: absolute; /* Position relative to .container */
+            top: 20px; /* Distance from top */
+            right: 20px; /* Distance from right */
+            z-index: 10;
+        }
+
+        .dashboard-button:hover {
+            background-color: #008CBA; /* Darker blue on hover */
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for dashboard button */
+        @media (max-width: 768px) {
+            .dashboard-button {
+                top: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-button {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="dashboard-button" onclick="goToDashboard()">Go to Dashboard</button>
+        <h1>🪨📄✂️ Rock, Paper, Scissors</h1>
+        <div class="choices">
+            <button class="choice-btn" onclick="play('rock')">Rock</button>
+            <button class="choice-btn" onclick="play('scissors')">Scissors</button>
+            <button class="choice-btn" onclick="play('paper')">Paper</button>
+        </div>
+        <div class="result" id="result">Choose your move!</div>
+        <div class="score">You: <span id="user-score">0</span> | Computer: <span id="computer-score">0</span></div>
+        <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+    </div>
+    <audio id="backgroundMusic" src="Beauty(chosic.com).mp3" loop preload="auto"></audio>
+    <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4387" preload="auto"></audio>
+    <audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/6504" preload="auto"></audio>
+    <audio id="tieSound" src="https://www.fesliyanstudios.com/play-mp3/4373" preload="auto"></audio>
+
+    <script>
+        const choices = ['rock', 'scissors', 'paper'];
+        let userScore = 0;
+        let computerScore = 0;
+        let musicStarted = false; // Flag to check if music has started
+
+        const resultDiv = document.getElementById('result');
+        const userScoreSpan = document.getElementById('user-score');
+        const computerScoreSpan = document.getElementById('computer-score');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const winSound = document.getElementById('winSound');
+        const loseSound = document.getElementById('loseSound');
+        const tieSound = document.getElementById('tieSound');
+
+        // Initial setup - music will try to play, but might be blocked
+        window.onload = () => {
+            backgroundMusic.volume = 0.2;
+            // Attempt to play, but handle potential autoplay policy error
+            backgroundMusic.play().then(() => {
+                musicStarted = true;
+            }).catch(e => {
+                console.error("Background music autoplay prevented:", e);
+                musicStarted = false; // Set to false if blocked
+            });
+
+            // Listen for when a sound effect ends to resume background music
+            winSound.onended = () => {
+                if (musicStarted && !backgroundMusic.paused) backgroundMusic.play().catch(e => {});
+            };
+            loseSound.onended = () => {
+                if (musicStarted && !backgroundMusic.paused) backgroundMusic.play().catch(e => {});
+            };
+            tieSound.onended = () => {
+                if (musicStarted && !backgroundMusic.paused) backgroundMusic.play().catch(e => {});
+            };
+        };
+
+        function getComputerChoice() {
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+    function goToDashboard() {
+    window.location.href = 'ses.html'; // 
+}
+        function play(userChoice) {
+            // Start background music if it hasn't started yet (due to autoplay policy)
+            if (!musicStarted) {
+                backgroundMusic.play().then(() => {
+                    musicStarted = true;
+                    backgroundMusic.volume = 0.2; // Ensure volume is set
+                }).catch(e => console.error("Background music start on interaction prevented:", e));
+            }
+
+            // Pause background music briefly when a result sound plays
+            if (musicStarted && !backgroundMusic.paused) {
+                backgroundMusic.pause();
+            }
+
+            const computerChoice = getComputerChoice();
+            let resultText = '';
+            let resultClass = '';
+
+            // Stop any currently playing result sounds and reset their time
+            winSound.pause(); winSound.currentTime = 0;
+            loseSound.pause(); loseSound.currentTime = 0;
+            tieSound.pause(); tieSound.currentTime = 0;
+
+            if (userChoice === computerChoice) {
+                resultText = `It's a tie! You both chose ${userChoice}.`;
+                resultClass = 'tie';
+                tieSound.play();
+            } else if (
+                (userChoice === 'rock' && computerChoice === 'scissors') ||
+                (userChoice === 'scissors' && computerChoice === 'paper') ||
+                (userChoice === 'paper' && computerChoice === 'rock')
+            ) {
+                resultText = `You win! ${userChoice} beats ${computerChoice}.`;
+                userScore++;
+                resultClass = 'win';
+                winSound.play();
+            } else {
+                resultText = `You lose! ${computerChoice} beats ${userChoice}.`;
+                computerScore++;
+                resultClass = 'lose';
+                loseSound.play();
+            }
+
+            resultDiv.textContent = resultText;
+            resultDiv.className = 'result ' + resultClass;
+            userScoreSpan.textContent = userScore;
+            computerScoreSpan.textContent = computerScore;
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            userScoreSpan.textContent = userScore;
+            computerScoreSpan.textContent = computerScore;
+            resultDiv.textContent = 'Choose your move!';
+            resultDiv.className = 'result';
+
+            // Ensure background music resumes if it was paused
+            if (musicStarted && backgroundMusic.paused) { // Only try to play if it was already allowed
+                backgroundMusic.play().catch(e => console.error("Background music resume prevented:", e));
+            }
+        }
+
+        // Function to navigate back to the main dashboard
+        function goToDashboard() {
+            window.location.href = 'final.html'; // Replace 'index.html' with the actual name of your dashboard file
+        }
+    </script>
+</body>
+</html>
